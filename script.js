@@ -13,103 +13,102 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Debugging
-console.log("Firebase Initialized:", firebase.apps.length > 0);
-
-// Function to add a faculty vehicle
+// Function to add Faculty Vehicle
 function addFaculty() {
     const name = document.getElementById("facultyName").value.trim();
     const plate = document.getElementById("facultyPlate").value.trim();
-    
-    if (!name || !plate) {
-        alert("Please enter both faculty name and plate number!");
+
+    if (name === "" || plate === "") {
+        alert("Please enter both name and number plate.");
         return;
     }
 
     db.ref("faculty/" + plate).set({
         name: name
     }).then(() => {
-        console.log("Faculty vehicle added:", name, plate);
+        console.log("Faculty vehicle added successfully!");
         document.getElementById("facultyName").value = "";
         document.getElementById("facultyPlate").value = "";
+        loadFacultyVehicles();
     }).catch((error) => {
         console.error("Error adding faculty vehicle:", error);
     });
 }
 
-// Function to log outsider entry
-function logEntry() {
-    const plate = document.getElementById("entryPlate").value.trim();
-    if (!plate) {
-        alert("Enter a vehicle plate number!");
+// Function to add Outsider Vehicle Entry
+function addVehicleEntry() {
+    const plateNumber = document.getElementById("plateNumberInput").value.trim();
+    if (plateNumber === "") {
+        alert("Enter a valid number plate.");
         return;
     }
 
     const entryTime = new Date().toISOString();
-    db.ref("outsiders/" + plate).set({
+    db.ref("outsiders/" + plateNumber).set({
         entry: entryTime,
         exit: null
     }).then(() => {
-        console.log("Outsider entry logged:", plate, entryTime);
-        document.getElementById("entryPlate").value = "";
+        console.log("Vehicle entry added successfully!");
+        document.getElementById("plateNumberInput").value = "";
+        loadOutsiderVehicles();
     }).catch((error) => {
-        console.error("Error logging entry:", error);
+        console.error("Error adding entry:", error);
     });
 }
 
-// Function to log outsider exit
-function logExit() {
-    const plate = document.getElementById("exitPlate").value.trim();
-    if (!plate) {
-        alert("Enter a vehicle plate number!");
+// Function to update vehicle exit
+function updateVehicleExit() {
+    const plateNumber = document.getElementById("plateNumberInput").value.trim();
+    if (plateNumber === "") {
+        alert("Enter a valid number plate.");
         return;
     }
 
     const exitTime = new Date().toISOString();
-    db.ref("outsiders/" + plate + "/exit").set(exitTime)
-    .then(() => {
-        console.log("Exit time updated for:", plate);
-        document.getElementById("exitPlate").value = "";
-    })
-    .catch((error) => {
+    db.ref("outsiders/" + plateNumber + "/exit").set(exitTime).then(() => {
+        console.log("Exit time updated successfully!");
+        document.getElementById("plateNumberInput").value = "";
+        loadOutsiderVehicles();
+    }).catch((error) => {
         console.error("Error updating exit time:", error);
     });
 }
 
-// Function to load faculty list
-function loadFaculty() {
-    const list = document.getElementById("facultyList");
-    list.innerHTML = "";
-
-    db.ref("faculty").on("value", (snapshot) => {
+// Function to load Faculty Vehicles
+function loadFacultyVehicles() {
+    db.ref("faculty").once("value", (snapshot) => {
+        const list = document.getElementById("facultyList");
         list.innerHTML = "";
-        snapshot.forEach((child) => {
-            const data = child.val();
+        snapshot.forEach((childSnapshot) => {
+            const plate = childSnapshot.key;
+            const name = childSnapshot.val().name;
             const li = document.createElement("li");
-            li.textContent = `${data.name} - ${child.key}`;
+            li.textContent = `${name} - ${plate}`;
             list.appendChild(li);
         });
     });
 }
 
-// Function to load outsiders list
-function loadOutsiders() {
-    const list = document.getElementById("outsidersList");
-    list.innerHTML = "";
-
-    db.ref("outsiders").on("value", (snapshot) => {
+// Function to load Outsider Vehicles
+function loadOutsiderVehicles() {
+    db.ref("outsiders").once("value", (snapshot) => {
+        const list = document.getElementById("outsidersList");
         list.innerHTML = "";
-        snapshot.forEach((child) => {
-            const data = child.val();
+        snapshot.forEach((childSnapshot) => {
+            const plate = childSnapshot.key;
+            const data = childSnapshot.val();
             const li = document.createElement("li");
-            li.textContent = `${child.key} - Entry: ${data.entry} | Exit: ${data.exit || "N/A"}`;
+            li.textContent = `${plate}: Entry - ${data.entry}, Exit - ${data.exit || "Pending"}`;
             list.appendChild(li);
         });
     });
 }
 
-// Load data on page load
-window.onload = function () {
-    loadFaculty();
-    loadOutsiders();
-};
+// Event Listeners
+document.getElementById("addFacultyBtn").addEventListener("click", addFaculty);
+document.getElementById("addEntryBtn").addEventListener("click", addVehicleEntry);
+document.getElementById("updateExitBtn").addEventListener("click", updateVehicleExit);
+
+// Load existing data
+loadFacultyVehicles();
+loadOutsiderVehicles();
