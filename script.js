@@ -13,52 +13,74 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Function to update vehicle entry
-function addVehicleEntry(plateNumber, entryTime) {
-    firebase.database().ref("outsiders/" + plateNumber).set({
+// Function to log vehicle entry
+function logEntry(plateNumber) {
+    const entryTime = new Date().toISOString();
+    db.ref("outsiders/" + plateNumber).set({
         entry: entryTime,
         exit: null
     }).then(() => {
-        console.log("✅ Vehicle entry added successfully!");
-    }).catch((error) => {
-        console.error("❌ Error adding entry:", error);
+        console.log(`✅ Entry logged: ${plateNumber} at ${entryTime}`);
+    }).catch(error => {
+        console.error("❌ Error logging entry:", error);
     });
 }
 
-// Function to update vehicle exit time
-function updateVehicleExit(plateNumber, exitTime) {
-    firebase.database().ref("outsiders/" + plateNumber + "/exit").set(exitTime)
-    .then(() => {
-        console.log("✅ Exit time updated successfully!");
-    }).catch((error) => {
-        console.error("❌ Error updating exit time:", error);
+// Function to update vehicle exit
+function logExit(plateNumber) {
+    const exitTime = new Date().toISOString();
+    db.ref("outsiders/" + plateNumber + "/exit").set(exitTime).then(() => {
+        console.log(`✅ Exit updated: ${plateNumber} at ${exitTime}`);
+    }).catch(error => {
+        console.error("❌ Error updating exit:", error);
     });
 }
 
-// Attach event listeners only if elements exist
-document.addEventListener("DOMContentLoaded", function() {
-    const entryBtn = document.getElementById("addEntryBtn");
-    const exitBtn = document.getElementById("updateExitBtn");
+// Function to retrieve vehicle entry and exit logs
+function getVehicleLogs(plateNumber) {
+    db.ref("outsiders/" + plateNumber).once("value").then(snapshot => {
+        if (snapshot.exists()) {
+            console.log(`📋 Vehicle: ${plateNumber}`, snapshot.val());
+        } else {
+            console.log("⚠️ No record found for:", plateNumber);
+        }
+    }).catch(error => {
+        console.error("❌ Error fetching logs:", error);
+    });
+}
 
-    if (entryBtn && exitBtn) {
-        entryBtn.addEventListener("click", function() {
-            const plateNumber = document.getElementById("plateNumberInput").value.trim();
-            if (plateNumber) {
-                addVehicleEntry(plateNumber, new Date().toISOString());
-            } else {
-                console.error("❌ Please enter a valid plate number.");
-            }
-        });
+// Command Prompt UI
+document.addEventListener("DOMContentLoaded", () => {
+    const inputField = document.createElement("input");
+    inputField.setAttribute("type", "text");
+    inputField.setAttribute("placeholder", "Enter command (e.g., entry ABC123)");
+    inputField.style.width = "100%";
+    inputField.style.padding = "10px";
+    inputField.style.marginTop = "10px";
+    document.body.appendChild(inputField);
 
-        exitBtn.addEventListener("click", function() {
-            const plateNumber = document.getElementById("plateNumberInput").value.trim();
-            if (plateNumber) {
-                updateVehicleExit(plateNumber, new Date().toISOString());
-            } else {
-                console.error("❌ Please enter a valid plate number.");
+    inputField.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            const command = inputField.value.trim().split(" ");
+            inputField.value = ""; // Clear input after command execution
+
+            if (command.length < 2) {
+                console.log("⚠️ Invalid command. Use: entry <plate>, exit <plate>, or fetch <plate>");
+                return;
             }
-        });
-    } else {
-        console.error("❌ Buttons not found in the HTML!");
-    }
+
+            const action = command[0].toLowerCase();
+            const plateNumber = command[1];
+
+            if (action === "entry") {
+                logEntry(plateNumber);
+            } else if (action === "exit") {
+                logExit(plateNumber);
+            } else if (action === "fetch") {
+                getVehicleLogs(plateNumber);
+            } else {
+                console.log("⚠️ Unknown command. Use: entry <plate>, exit <plate>, fetch <plate>");
+            }
+        }
+    });
 });
