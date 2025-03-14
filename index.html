@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Entry System</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Vehicle Entry System - IITGN</h1>
+
+    <h2>Faculty Vehicles</h2>
+    <ul id="facultyList"></ul>
+
+    <h3>Add Faculty Vehicle</h3>
+    <input type="text" id="facultyName" placeholder="Faculty Name">
+    <input type="text" id="facultyPlate" placeholder="Number Plate">
+    <button onclick="addFaculty()">Add</button>
+
+    <h2>Outsider Vehicles Log</h2>
+    <ul id="outsidersList"></ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
