@@ -1,52 +1,50 @@
-// Initialize Firebase
+// Firebase configuration
 const firebaseConfig = {
-    databaseURL: "https://anpr-bg-default-rtdb.asia-southeast1.firebasedatabase.app/"
-};
+    apiKey: "AIzaSyDRbU-AP9bY9QX1IGjBv_K-PQ6c9KOPQ_E",
+    authDomain: "anpr-bg.firebaseapp.com",
+    databaseURL: "https://anpr-bg-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "anpr-bg",
+    storageBucket: "anpr-bg.firebasestorage.app",
+    messagingSenderId: "1059960578017",
+    appId: "1:1059960578017:web:cd2c0158052e4e1388bca0"
+  };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Fetch and display faculty vehicles
-function loadFaculty() {
-    db.ref("faculty").on("value", (snapshot) => {
-        let facultyList = document.getElementById("facultyList");
-        facultyList.innerHTML = ""; // Clear previous list
-
-        snapshot.forEach((child) => {
-            let listItem = document.createElement("li");
-            listItem.textContent = `${child.key}: ${child.val()}`;
-            facultyList.appendChild(listItem);
-        });
+// Function to update vehicle entry
+function addVehicleEntry(plateNumber, entryTime) {
+    const ref = db.ref("outsiders/" + plateNumber);
+    ref.set({
+        entry: entryTime,
+        exit: null
+    }).then(() => {
+        console.log("Vehicle entry added successfully!");
+    }).catch((error) => {
+        console.error("Error adding entry:", error);
     });
 }
 
-// Fetch and display outsider vehicle logs
-function loadOutsiders() {
-    db.ref("outsiders").on("value", (snapshot) => {
-        let outsidersList = document.getElementById("outsidersList");
-        outsidersList.innerHTML = ""; // Clear previous list
-
-        snapshot.forEach((child) => {
-            let data = child.val();
-            let listItem = document.createElement("li");
-            listItem.textContent = `${child.key}: Entry - ${data.entry}, Exit - ${data.exit || "Pending"}`;
-            outsidersList.appendChild(listItem);
-        });
+// Function to update vehicle exit time
+function updateVehicleExit(plateNumber, exitTime) {
+    const ref = db.ref("outsiders/" + plateNumber + "/exit");
+    ref.set(exitTime).then(() => {
+        console.log("Exit time updated successfully!");
+    }).catch((error) => {
+        console.error("Error updating exit time:", error);
     });
 }
 
-// Add a new faculty vehicle
-function addFaculty() {
-    let name = document.getElementById("facultyName").value;
-    let plate = document.getElementById("facultyPlate").value;
+// Example Usage
+document.getElementById("addEntryBtn").addEventListener("click", function() {
+    const plateNumber = document.getElementById("plateNumberInput").value;
+    const entryTime = new Date().toISOString();
+    addVehicleEntry(plateNumber, entryTime);
+});
 
-    if (name && plate) {
-        db.ref(`faculty/${name}`).set(plate);
-        document.getElementById("facultyName").value = "";
-        document.getElementById("facultyPlate").value = "";
-    }
-}
-
-// Load data on page load
-loadFaculty();
-loadOutsiders();
+document.getElementById("updateExitBtn").addEventListener("click", function() {
+    const plateNumber = document.getElementById("plateNumberInput").value;
+    const exitTime = new Date().toISOString();
+    updateVehicleExit(plateNumber, exitTime);
+});
