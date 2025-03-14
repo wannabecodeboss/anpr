@@ -1,48 +1,87 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffe6f2; /* Soft pastel pink */
+    color: #6b2d5c; /* Deep pinkish-purple for text */
     text-align: center;
     margin: 0;
-    padding: 20px;
+    padding: 0;
 }
 
-.container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Headings */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #b30059; /* Dark pink */
+    margin-top: 20px;
 }
 
-input, button {
-    margin: 10px;
+h2, h3 {
+    color: #8c0044; /* Deep pink */
+    margin-bottom: 10px;
+}
+
+/* Input Fields */
+input {
+    width: 250px;
     padding: 10px;
-    width: 90%;
-    max-width: 300px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+    margin: 10px;
+    border: 2px solid #ff66b2;
+    border-radius: 20px;
+    outline: none;
+    font-size: 1rem;
+    color: #8c0044;
+    background-color: #fff0f5; /* Light pink */
 }
 
+input::placeholder {
+    color: #cc6699;
+}
+
+/* Buttons */
 button {
-    background-color: #28a745;
+    background-color: #ff66b2; /* Hot pink */
     color: white;
     border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #cc6699; /* Darker pink */
+    transform: scale(1.05);
 }
 
+/* List Styling */
 ul {
     list-style-type: none;
     padding: 0;
 }
 
 li {
-    background: #ddd;
-    margin: 5px;
+    background-color: #ffcce6; /* Soft pink */
     padding: 10px;
-    border-radius: 5px;
+    margin: 5px auto;
+    width: 60%;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #6b2d5c;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    input {
+        width: 80%;
+    }
+    button {
+        width: 80%;
+    }
+    li {
+        width: 80%;
+    }
 }
