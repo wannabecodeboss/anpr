@@ -4,7 +4,7 @@ const firebaseConfig = {
     authDomain: "anpr-bg.firebaseapp.com",
     databaseURL: "https://anpr-bg-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "anpr-bg",
-    storageBucket: "anpr-bg.firebasestorage.app",
+    storageBucket: "anpr-bg.appspot.com",
     messagingSenderId: "1059960578017",
     appId: "1:1059960578017:web:cd2c0158052e4e1388bca0"
   };
