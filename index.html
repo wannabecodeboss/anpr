@@ -3,43 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle Entry System - IITGN</title>
-    
-    <!-- Firebase Scripts (Using Compatibility Mode) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
-
-    <!-- Stylesheet -->
+    <title>Vehicle Entry System</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>🚗 Vehicle Entry System - IITGN</h1>
+        <h1>Vehicle Entry System - IITGN</h1>
 
-        <!-- Faculty Vehicles Section -->
         <section>
             <h2>Faculty Vehicles</h2>
             <ul id="facultyList"></ul>
-            <div class="form-group">
-                <input type="text" id="facultyName" placeholder="Faculty Name">
-                <input type="text" id="facultyPlate" placeholder="Number Plate">
-                <button id="addFacultyBtn">Add Faculty Vehicle</button>
-            </div>
+            
+            <h3>Add Faculty Vehicle</h3>
+            <input type="text" id="facultyName" placeholder="Faculty Name">
+            <input type="text" id="facultyPlate" placeholder="Number Plate">
+            <button id="addFacultyBtn">Add</button>
         </section>
 
-        <!-- Outsider Vehicles Section -->
         <section>
             <h2>Outsider Vehicles Log</h2>
             <ul id="outsidersList"></ul>
-            <div class="form-group">
-                <input type="text" id="plateNumberInput" placeholder="Number Plate">
-                <button id="addEntryBtn">Log Entry</button>
-                <button id="updateExitBtn">Log Exit</button>
-            </div>
         </section>
     </div>
 
-    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
